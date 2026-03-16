@@ -24,21 +24,6 @@ console.log("ENV:", {
 // Configuración de la conexión a la base de datos mediante URI
 const pool = mysql.createPool(uri);
 
-// En entornos Serverless de Vercel, es mejor no inicializar las tablas en cada cold start
-// Si necesitas crear las tablas, descomenta esta función o ejecútala manualmente
-/*
-async function initializeDB() {
-    try {
-        const connection = await pool.getConnection();
-        console.log('✅ Conectado exitosamente a la base de datos TiDB');
-        // ... (queries de creación de tablas)
-        connection.release();
-    } catch (err) {
-        console.error('❌ Error conectando a la base de datos:', err);
-    }
-}
-// initializeDB();
-*/
 
 
 // ============ ENDPOINTS ============
