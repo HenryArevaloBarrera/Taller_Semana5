@@ -15,6 +15,12 @@ const dbUser = encodeURIComponent(process.env.DB_USERNAME || '');
 const dbPass = encodeURIComponent(process.env.DB_PASSWORD || '');
 const uri = `mysql://${dbUser}:${dbPass}@${process.env.DB_HOST}:${process.env.DB_PORT || 4000}/${process.env.DB_DATABASE}?ssl={"rejectUnauthorized":true}`;
 
+console.log("ENV:", {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USERNAME,
+    db: process.env.DB_DATABASE
+});
 // Configuración de la conexión a la base de datos mediante URI
 const pool = mysql.createPool(uri);
 
