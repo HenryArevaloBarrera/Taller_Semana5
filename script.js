@@ -143,7 +143,7 @@ async function loadCafes() {
                     <div class="stat-icon cafes">🫘</div>
                     <span class="stat-title">${cafe.nombre}</span>
                 </div>
-                <div class="stat-value">$${cafe.precio.toFixed(2)}</div>
+                <div class="stat-value">$${Number(cafe.precio || 0).toFixed(2)}</div>
                 <div style="margin-top: 12px;">
                     <p style="color: #666;">🌍 ${cafe.origen}</p>
                     <p style="color: #666;">🔥 Intensidad: ${cafe.intensidad}/10</p>
@@ -151,6 +151,7 @@ async function loadCafes() {
             </div>
         `).join('');
     } catch (error) {
+        console.error("DEBUG FETCH CAFES ERROR:", error);
         container.innerHTML = '<div class="alert alert-error">Error al cargar cafés</div>';
     }
 }
