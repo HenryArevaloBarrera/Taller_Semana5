@@ -7,20 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuración de la conexión a la base de datos (TiDB requiere SSL)
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 4000,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    ssl: {
-        rejectUnauthorized: true // Requerido para TiDB Cloud
-    },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+// Construir la URI de conexión para TiDB Serverless (evita el bug de "Missing user name prefix")
+const uri = `mysql://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT || 4000}/${process.env.DB_DATABASE}?ssl={"rejectUnauthorized":true}`;
+
+// Configuración de la conexión a la base de datos mediante URI
+const pool = mysql.createPool(uri);
 
 // En entornos Serverless de Vercel, es mejor no inicializar las tablas en cada cold start
 // Si necesitas crear las tablas, descomenta esta función o ejecútala manualmente
