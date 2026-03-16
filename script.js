@@ -1,5 +1,5 @@
-// Configuración de la API (cambia esto por tu URL de Vercel)
-const API_BASE = 'https://tu-app.vercel.app/api';
+// Configuración de la API (Apunta al servidor Node.js local)
+const API_BASE = 'http://localhost:3000/api';
 
 // ============ FUNCIONES DE CONEXIÓN ============
 async function fetchAPI(endpoint, options = {}) {
@@ -42,6 +42,30 @@ function formatDate(dateString) {
         hour: '2-digit',
         minute: '2-digit'
     });
+}
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 2
+    }).format(value);
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    
+    sidebar.classList.toggle('active');
+    
+    let overlay = document.querySelector('.sidebar-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', toggleSidebar);
+    }
+    overlay.classList.toggle('active');
 }
 
 // ============ DASHBOARD ============
@@ -143,7 +167,7 @@ async function loadCafes() {
                     <div class="stat-icon cafes">🫘</div>
                     <span class="stat-title">${cafe.nombre}</span>
                 </div>
-                <div class="stat-value">$${cafe.precio.toFixed(2)}</div>
+                <div class="stat-value">${formatCurrency(cafe.precio)}</div>
                 <div style="margin-top: 12px;">
                     <p style="color: #666;">🌍 ${cafe.origen}</p>
                     <p style="color: #666;">🔥 Intensidad: ${cafe.intensidad}/10</p>
@@ -187,6 +211,10 @@ function openNewCafeModal() {
     `;
     
     document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
     
     document.getElementById('cafeForm').onsubmit = async (e) => {
         e.preventDefault();
@@ -286,6 +314,10 @@ function openNewClienteModal() {
     `;
     
     document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
     
     document.getElementById('clienteForm').onsubmit = async (e) => {
         e.preventDefault();
@@ -399,6 +431,10 @@ function openNewPedidoModal() {
     
     document.body.appendChild(modal);
     
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+    
     // Cargar opciones
     loadSelectOptions();
     
@@ -449,7 +485,7 @@ async function loadSelectOptions() {
         const cafes = await cafesRes.json();
         const cafeSelect = document.getElementById('cafe_id');
         cafeSelect.innerHTML += cafes.map(c => 
-            `<option value="${c.id}">${c.nombre} - $${c.precio}</option>`
+            `<option value="${c.id}">${c.nombre} - ${formatCurrency(c.precio)}</option>`
         ).join('');
     } catch (error) {
         console.error('Error cargando opciones:', error);

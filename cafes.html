@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="layout">
         <aside class="sidebar">
@@ -24,7 +26,10 @@
 
         <main class="main-content">
             <header class="header">
-                <h1>Nuestros Cafés</h1>
+                <div class="header-left">
+                    <button class="mobile-menu-btn" aria-label="Abrir menú" onclick="toggleSidebar()">☰</button>
+                    <h1>Nuestros Cafés</h1>
+                </div>
                 <button class="btn" onclick="openNewCafeModal()">+ Nuevo Café</button>
             </header>
 
@@ -39,4 +44,5 @@
         document.addEventListener('DOMContentLoaded', loadCafes);
     </script>
 </body>
+
 </html>
