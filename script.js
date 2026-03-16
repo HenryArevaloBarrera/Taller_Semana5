@@ -1,5 +1,5 @@
 // Configuración de la API (cambia esto por tu URL de Vercel)
-const API_BASE = 'https://taller-semana5.vercel.app/';
+const API_BASE = '/api';
 
 // ============ FUNCIONES DE CONEXIÓN ============
 async function fetchAPI(endpoint, options = {}) {
