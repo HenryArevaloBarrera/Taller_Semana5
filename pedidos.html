@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafetería - Pedidos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="coffee-icon">☕</span>
+                <h2>Café Especial</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">📊 Dashboard</a>
+                <a href="cafes.html" class="nav-item">🫘 Cafés</a>
+                <a href="clientes.html" class="nav-item">👥 Clientes</a>
+                <a href="pedidos.html" class="nav-item active">📦 Pedidos</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Gestión de Pedidos</h1>
+                <button class="btn" onclick="openNewPedidoModal()">+ Nuevo Pedido</button>
+            </header>
+
+            <div class="table-container" id="pedidosContainer">
+                <div class="loading">Cargando pedidos...</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadPedidos);
+    </script>
+</body>
+</html>
