@@ -71,6 +71,25 @@ app.post('/api/cafes', async (req, res) => {
     }
 });
 
+app.delete('/api/cafes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [result] = await pool.query('DELETE FROM cafes WHERE id = ?', [id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Café no encontrado' });
+        }
+        res.json({ success: true, message: 'Café eliminado correctamente' });
+    } catch (err) {
+        console.error("Error en DELETE /api/cafes:", err);
+        // Manejo de Error 1451: Foreign Key Constraint (El café tiene pedidos asociados)
+        if (err.errno === 1451) {
+            return res.status(400).json({ error: 'No se puede eliminar el café porque ya tiene pedidos registrados. Elimina los pedidos primero.', code: 'FK_CONSTRAINT' });
+        }
+        res.status(500).json({ error: 'Error interno al intentar eliminar el café', details: err.message });
+    }
+});
+
 // --- CLIENTES API ---
 app.get('/api/clientes', async (req, res) => {
     try {
@@ -92,6 +111,25 @@ app.post('/api/clientes', async (req, res) => {
         res.status(201).json({ success: true, id: result.insertId });
     } catch (err) {
         res.status(500).json({ error: 'Error registrando cliente' });
+    }
+});
+
+app.delete('/api/clientes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [result] = await pool.query('DELETE FROM clientes WHERE id = ?', [id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+        res.json({ success: true, message: 'Cliente eliminado correctamente' });
+    } catch (err) {
+        console.error("Error en DELETE /api/clientes:", err);
+        // Manejo de Error 1451: Foreign Key Constraint (El cliente tiene pedidos asociados)
+        if (err.errno === 1451) {
+            return res.status(400).json({ error: 'No se puede eliminar el cliente porque tiene pedidos asociados. Elimina sus pedidos primero.', code: 'FK_CONSTRAINT' });
+        }
+        res.status(500).json({ error: 'Error interno al intentar eliminar el cliente', details: err.message });
     }
 });
 
@@ -124,6 +162,21 @@ app.post('/api/pedidos', async (req, res) => {
         res.status(201).json({ success: true, id: result.insertId });
     } catch (err) {
         res.status(500).json({ error: 'Error creando pedido' });
+    }
+});
+
+app.delete('/api/pedidos/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [result] = await pool.query('DELETE FROM pedidos WHERE id = ?', [id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Pedido no encontrado' });
+        }
+        res.json({ success: true, message: 'Pedido eliminado correctamente' });
+    } catch (err) {
+        console.error("Error en DELETE /api/pedidos:", err);
+        res.status(500).json({ error: 'Error interno al intentar eliminar el pedido', details: err.message });
     }
 });
 

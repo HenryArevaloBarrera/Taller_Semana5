@@ -23,6 +23,42 @@ async function fetchAPI(endpoint, options = {}) {
     }
 }
 
+async function deleteResource(type, id) {
+    // Traducciones amigables
+    const typeNames = {
+        'cafes': 'este café',
+        'clientes': 'este cliente',
+        'pedidos': 'este pedido'
+    };
+    
+    const confirmMessage = `¿Estás seguro de eliminar ${typeNames[type]}?`;
+    
+    if (confirm(confirmMessage)) {
+        try {
+            const result = await fetchAPI(`${type}/${id}`, { method: 'DELETE' });
+            
+            if (result) {
+                if (result.success) {
+                    showAlert(`✅ ${result.message}`);
+                    // Recargar la tabla correspondiente
+                    if (type === 'cafes') loadCafes();
+                    if (type === 'clientes') loadClientes();
+                    if (type === 'pedidos') {
+                        loadPedidos();
+                        loadRecentPedidos();
+                    }
+                    if (document.getElementById('statsContainer')) loadDashboard();
+                } else if (result.error) {
+                    showAlert(`❌ ${result.error}`, 'error');
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            showAlert('Error al procesar la eliminación', 'error');
+        }
+    }
+}
+
 function showAlert(message, type = 'success') {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
@@ -106,6 +142,7 @@ async function loadRecentPedidos() {
                         <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Fecha</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,6 +153,9 @@ async function loadRecentPedidos() {
                             <td>${p.cantidad}</td>
                             <td><span class="status-badge status-${p.estado}">${p.estado}</span></td>
                             <td>${formatDate(p.fecha_pedido)}</td>
+                            <td>
+                                <button class="btn btn-delete btn-sm" onclick="deleteResource('pedidos', ${p.id})" title="Eliminar pedido">🗑️</button>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -141,7 +181,8 @@ async function loadCafes() {
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon cafes">🫘</div>
-                    <span class="stat-title">${cafe.nombre}</span>
+                    <span class="stat-title" style="flex-grow: 1;">${cafe.nombre}</span>
+                    <button class="btn btn-delete btn-sm" onclick="deleteResource('cafes', ${cafe.id})" style="padding: 4px; background: transparent; border: none; font-size: 1.2rem; cursor: pointer;" title="Eliminar café">🗑️</button>
                 </div>
                 <div class="stat-value">$${Number(cafe.precio || 0).toFixed(2)}</div>
                 <div style="margin-top: 12px;">
@@ -239,6 +280,7 @@ async function loadClientes() {
                         <th>Email</th>
                         <th>Teléfono</th>
                         <th>Fecha Registro</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -249,6 +291,9 @@ async function loadClientes() {
                             <td>${c.email || '—'}</td>
                             <td>${c.telefono || '—'}</td>
                             <td>${formatDate(c.fecha_registro)}</td>
+                            <td>
+                                <button class="btn btn-delete btn-sm" onclick="deleteResource('clientes', ${c.id})" title="Eliminar cliente">🗑️</button>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -338,6 +383,7 @@ async function loadPedidos() {
                         <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Fecha</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -349,6 +395,9 @@ async function loadPedidos() {
                             <td>${p.cantidad}</td>
                             <td><span class="status-badge status-${p.estado}">${p.estado}</span></td>
                             <td>${formatDate(p.fecha_pedido)}</td>
+                            <td>
+                                <button class="btn btn-delete btn-sm" onclick="deleteResource('pedidos', ${p.id})" title="Eliminar pedido">🗑️</button>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>

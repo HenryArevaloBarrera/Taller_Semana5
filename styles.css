@@ -271,6 +271,21 @@ tr:hover td {
     color: white;
 }
 
+.btn-delete {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+}
+
 /* Modal */
 .modal {
     display: none;
