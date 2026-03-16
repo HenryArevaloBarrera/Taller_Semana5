@@ -8,7 +8,12 @@ app.use(cors());
 app.use(express.json());
 
 // Construir la URI de conexión para TiDB Serverless (evita el bug de "Missing user name prefix")
-const uri = `mysql://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT || 4000}/${process.env.DB_DATABASE}?ssl={"rejectUnauthorized":true}`;
+// NOTA IMPORTANTE: TiDB usa un punto "." en el username. Al construir una URI, ese punto o los caracteres
+// especiales de la contraseña (como el punto en xu6Rg63oV4uff1G.root) DEBEN codificarse como %2E.
+// encodeURIComponent() hace esto de forma segura automáticamente.
+const dbUser = encodeURIComponent(process.env.DB_USERNAME || '');
+const dbPass = encodeURIComponent(process.env.DB_PASSWORD || '');
+const uri = `mysql://${dbUser}:${dbPass}@${process.env.DB_HOST}:${process.env.DB_PORT || 4000}/${process.env.DB_DATABASE}?ssl={"rejectUnauthorized":true}`;
 
 // Configuración de la conexión a la base de datos mediante URI
 const pool = mysql.createPool(uri);
