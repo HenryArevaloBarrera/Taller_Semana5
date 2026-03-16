@@ -84,7 +84,7 @@ async function loadDashboard() {
             </div>
         `;
     } catch (error) {
-        statsContainer.innerHTML = '<div class="alert alert-error">Error al cargar estadísticas</div>';
+        statsContainer.innerHTML = `<div class="alert alert-error">Error al cargar estadísticas: ${error.message}</div>`;
     }
 }
 
@@ -122,7 +122,7 @@ async function loadRecentPedidos() {
             </table>
         `;
     } catch (error) {
-        container.innerHTML = '<div class="alert alert-error">Error al cargar pedidos</div>';
+        container.innerHTML = `<div class="alert alert-error">Error al cargar pedidos recientes: ${error.message}</div>`;
     }
 }
 
@@ -152,7 +152,7 @@ async function loadCafes() {
         `).join('');
     } catch (error) {
         console.error("DEBUG FETCH CAFES ERROR:", error);
-        container.innerHTML = '<div class="alert alert-error">Error al cargar cafés</div>';
+        container.innerHTML = `<div class="alert alert-error" style="background: red; color: white;">Error CRÍTICO al cargar cafés: ${error.message}<br><small>${error.stack || ''}</small></div>`;
     }
 }
 
@@ -255,7 +255,7 @@ async function loadClientes() {
             </table>
         `;
     } catch (error) {
-        container.innerHTML = '<div class="alert alert-error">Error al cargar clientes</div>';
+        container.innerHTML = `<div class="alert alert-error">Error al cargar clientes: ${error.message}</div>`;
     }
 }
 
