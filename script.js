@@ -1,4 +1,4 @@
-// Configuración de la API (cambia esto por tu URL de Vercel)
+// Configuración de la API (Apunta dinámicamente al backend en Vercel)
 const API_BASE = '/api';
 
 // ============ FUNCIONES DE CONEXIÓN ============
