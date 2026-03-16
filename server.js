@@ -22,18 +22,21 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Comprobar conexión y estructurar la BD si es necesario
+// En entornos Serverless de Vercel, es mejor no inicializar las tablas en cada cold start
+// Si necesitas crear las tablas, descomenta esta función o ejecútala manualmente
+/*
 async function initializeDB() {
     try {
         const connection = await pool.getConnection();
         console.log('✅ Conectado exitosamente a la base de datos TiDB');
-
-
+        // ... (queries de creación de tablas)
+        connection.release();
     } catch (err) {
         console.error('❌ Error conectando a la base de datos:', err);
     }
 }
-initializeDB();
+// initializeDB();
+*/
 
 
 // ============ ENDPOINTS ============
@@ -52,8 +55,8 @@ app.get('/api/stats', async (req, res) => {
             puntuacion: 4.8 // Valor estático por ahora
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        console.error("Error en /api/stats:", err);
+        res.status(500).json({ error: 'Error interno del servidor', details: err.message });
     }
 });
 
@@ -63,7 +66,8 @@ app.get('/api/cafes', async (req, res) => {
         const [rows] = await pool.query('SELECT * FROM cafes ORDER BY fecha_creacion DESC');
         res.json(rows);
     } catch (err) {
-        res.status(500).json({ error: 'Error obteniendo cafés' });
+        console.error("Error en GET /api/cafes:", err);
+        res.status(500).json({ error: 'Error obteniendo cafés', details: err.message });
     }
 });
 
@@ -86,7 +90,8 @@ app.get('/api/clientes', async (req, res) => {
         const [rows] = await pool.query('SELECT * FROM clientes ORDER BY fecha_registro DESC');
         res.json(rows);
     } catch (err) {
-        res.status(500).json({ error: 'Error obteniendo clientes' });
+        console.error("Error en GET /api/clientes:", err);
+        res.status(500).json({ error: 'Error obteniendo clientes', details: err.message });
     }
 });
 
@@ -117,7 +122,8 @@ app.get('/api/pedidos', async (req, res) => {
         const [rows] = await pool.query(query);
         res.json(rows);
     } catch (err) {
-        res.status(500).json({ error: 'Error obteniendo pedidos' });
+        console.error("Error en GET /api/pedidos:", err);
+        res.status(500).json({ error: 'Error obteniendo pedidos', details: err.message });
     }
 });
 
